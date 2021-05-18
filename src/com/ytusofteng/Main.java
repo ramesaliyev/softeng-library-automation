@@ -1,7 +1,9 @@
 package com.ytusofteng;
 
+import com.ytusofteng.tests.*;
+
 public class Main {
     public static void main(String[] args) {
-	    System.out.println("Hello!");
+	    new LendingTest();
     }
 }
