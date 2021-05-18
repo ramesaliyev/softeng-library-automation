@@ -7,11 +7,37 @@ public class Entity {
     private int issueCount;
     private String name;
     private Date createdAt;
+    private int inStockCount;
 
     public Entity(int id, int issueCount, String name, Date createdAt) {
         this.id = id;
-        this.issueCount = issueCount;
         this.name = name;
         this.createdAt = createdAt;
+        this.issueCount = issueCount;
+        this.inStockCount = issueCount;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public int getIssueCount() {
+        return issueCount;
+    }
+
+    public int getInStockCount() {
+        return this.inStockCount;
+    }
+
+    public boolean hasStock() {
+        return this.inStockCount > 0;
+    }
+
+    public void increaseStock() {
+        this.inStockCount++;
+    }
+
+    public void decreaseStock() {
+        this.inStockCount--;
     }
 }
