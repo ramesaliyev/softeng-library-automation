@@ -2,7 +2,8 @@ package com.ytusofteng.test;
 
 import com.ytusofteng.model.accounts.*;
 import com.ytusofteng.model.entities.*;
-import com.ytusofteng.system.Library;
+import com.ytusofteng.model.enums.*;
+import com.ytusofteng.system.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,9 +16,12 @@ public class TestHelper {
         Date dateYesterday = Date.from(ZonedDateTime.now().minusDays(1).toInstant());
 
         // Add entities.
-        library.addEntity(new Book(1, 3, "The Lord of the Rings, The Fellowship of the Ring", TestHelper.parseDate("24/07/1954"), "J. R. R. Tolkien"));
-        library.addEntity(new Book(2, 2, "Harry Potter and the Philosopher's Stone", TestHelper.parseDate("26/06/1997"), "J. K. Rowling"));
-        library.addEntity(new Book(3, 1, "The Martian", TestHelper.parseDate("01/01/2011"), "Andy Weir"));
+        library.addEntity(new Book(1, 3, "The Lord of the Rings, The Fellowship of the Ring", TestHelper.parseDate("24/07/1954"), "J. R. R. Tolkien", BookType.FICTION));
+        library.addEntity(new Book(2, 2, "Harry Potter and the Philosopher's Stone", TestHelper.parseDate("26/06/1997"), "J. K. Rowling", BookType.FICTION));
+        library.addEntity(new Book(3, 1, "The Martian", TestHelper.parseDate("01/01/2011"), "Andy Weir", BookType.FICTION));
+        library.addEntity(new Book(4, 10, "Digital Signal Processing", TestHelper.parseDate("01/01/2011"), "Friedrich Nietzsche", BookType.TEXTBOOK));
+        library.addEntity(new Book(5, 10, "Linear Algebra Done Right", TestHelper.parseDate("01/01/2011"), "George Washington", BookType.TEXTBOOK));
+        library.addEntity(new Book(6, 10, "Introduction to Machine Learning", TestHelper.parseDate("01/01/2011"), "Bugs Bunny", BookType.TEXTBOOK));
         library.addEntity(new Magazine(101, 30, "Science Point", TestHelper.parseDate("17/11/1989"), dateYesterday));
         library.addEntity(new Magazine(102, 30, "Games Journal", TestHelper.parseDate("03/13/2015"), dateYesterday));
         library.addEntity(new Magazine(103, 30, "Beauty of People", TestHelper.parseDate("21/03/2013"), dateYesterday));

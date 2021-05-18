@@ -99,14 +99,12 @@ public class Database {
         return this.getAccountById(id, this.accounts);
     }
 
+    private HashMap<Entity, LentEntity> getAccountEntityMap(Account account) {
+        return this.lentEntities.computeIfAbsent(account, k -> new HashMap<>());
+    }
+
     public ArrayList<Entity> getEntitiesOfAccount(Account account) {
-        HashMap<Entity, LentEntity> accountEntityMap = this.lentEntities.get(account);
-
-        if (accountEntityMap == null) {
-            return null;
-        }
-
-        return new ArrayList<>(accountEntityMap.keySet());
+        return new ArrayList<>(this.getAccountEntityMap(account).keySet());
     }
 
     public boolean hasAccountLentEntity(Account account, Entity entity) {
@@ -115,10 +113,7 @@ public class Database {
     }
 
     public void lendEntity(Account account, Entity entity, Date lendDate) {
-        HashMap<Entity, LentEntity> accountEntityMap =
-            this.lentEntities.computeIfAbsent(account, k -> new HashMap<>());
-
-        accountEntityMap.put(entity, new LentEntity(entity, lendDate));
+        this.getAccountEntityMap(account).put(entity, new LentEntity(entity, lendDate));
     }
 
     public void returnEntity(Account account, Entity entity) {
@@ -126,8 +121,6 @@ public class Database {
             return;
         }
 
-        HashMap<Entity, LentEntity> accountEntityMap =
-            this.lentEntities.computeIfAbsent(account, k -> new HashMap<>());
-        accountEntityMap.remove(entity);
+        this.getAccountEntityMap(account).remove(entity);
     }
 }

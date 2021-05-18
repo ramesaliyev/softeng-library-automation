@@ -1,6 +1,6 @@
 package com.ytusofteng.model.enums;
 
-public enum BookTypes {
+public enum BookType {
     TEXTBOOK,
     FICTION
 }

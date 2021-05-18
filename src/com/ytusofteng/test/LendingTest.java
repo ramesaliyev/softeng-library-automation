@@ -82,6 +82,41 @@ public class LendingTest {
 
         System.out.println();
         System.out.println("Step 5: Try to return entity.");
-        
+        assertTrue(library.hasAccountLentEntity(studentRA, bookTM));
+        library.returnEntity(studentRA, bookTM);
+        assertFalse(library.hasAccountLentEntity(studentRA, bookTM));
+        assertEquals(bookTM.getInStockCount(), bookTM.getIssueCount());
+
+        System.out.println();
+        System.out.println("Step 6: Try to checkout an returned entity.");
+        assertFalse(library.hasAccountLentEntity(studentMB, bookTM)); 
+        library.checkoutEntity(studentMB, bookTM);
+        assertTrue(library.hasAccountLentEntity(studentMB, bookTM));
+        assertEquals(bookTM.getInStockCount(), bookTM.getIssueCount() - 1);
+
+        System.out.println();
+        System.out.println("Step 7: Try to checkout entity count more than account limit.");
+        assertEquals(0, library.getEntitiesOfAccount(studentMEG).size());
+        library.checkoutEntity(studentMEG, magazineSP);
+        assertEquals(1, library.getEntitiesOfAccount(studentMEG).size());
+        assertTrue(library.hasAccountLentEntity(studentMEG, magazineSP));
+        library.checkoutEntity(studentMEG, magazineGJ);
+        assertEquals(2, library.getEntitiesOfAccount(studentMEG).size());
+        assertTrue(library.hasAccountLentEntity(studentMEG, magazineGJ));
+        library.checkoutEntity(studentMEG, magazineBOP);
+        assertEquals(3, library.getEntitiesOfAccount(studentMEG).size());
+        assertTrue(library.hasAccountLentEntity(studentMEG, magazineBOP));
+        library.checkoutEntity(studentMEG, bookLOTR);
+        assertEquals(3, library.getEntitiesOfAccount(studentMEG).size());
+        assertFalse(library.hasAccountLentEntity(studentMEG, bookLOTR));
+
+        System.out.println();
+        System.out.println("Step 8: Try to checkout a Textbook as Student.");
+
+        System.out.println();
+        System.out.println("Step 9: Try to checkout a Textbook as Officer.");
+
+        System.out.println();
+        System.out.println("Step 10: Try to checkout a Textbook as Lecturer.");
     }
 }

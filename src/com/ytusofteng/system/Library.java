@@ -42,6 +42,11 @@ public class Library {
             return;
         }
 
+        if (this.getEntitiesOfAccount(account).size() >= this.config.getLendingCountLimit(account.getClass())) {
+            System.out.println("Fail: Account reached to maximum lend limit!");
+            return;
+        }
+
         this.db.lendEntity(account, entity, lendDate);
         entity.decreaseStock();
         System.out.println("Success: Entity#"+ entity.getId() +" lent successfully to Account#"+ account.getId() + ".");
