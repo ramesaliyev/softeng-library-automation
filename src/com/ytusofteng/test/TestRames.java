@@ -98,9 +98,7 @@ public class TestRames extends TestBase {
         Date date7MonthsAgo = Date.from(ZonedDateTime.now().minusMonths(7).toInstant());
 
         library.checkoutEntity(lecturerYES, magazineBOP, date7MonthsAgo); // Past due.
-        library.checkoutEntity(lecturerYES, magazineGJ, date7MonthsAgo); // Past due.
         library.returnEntity(lecturerYES, magazineBOP);
-        library.returnEntity(lecturerYES, magazineGJ);
         assertTrue(lecturerYES.getBalance() < 0); // Fines were applied left no positive balance.
 
         assertFalse(library.hasAccountLentEntity(lecturerYES, magazineGJ));
