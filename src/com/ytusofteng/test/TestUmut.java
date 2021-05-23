@@ -95,7 +95,7 @@ public class TestUmut extends TestBase {
         System.out.println();
         System.out.println("TEST: Try to reserve a textbook as lecturer.");
 
-        library.checkoutEntity(lecturerOK, textbookML); // No stock left.
+        library.checkoutEntity(lecturerYES, textbookML); // No stock left.
 
         assertFalse(library.hasAccountReservedEntity(lecturerOK, textbookML));
         library.reserveEntity(lecturerOK, textbookML);

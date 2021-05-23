@@ -125,6 +125,11 @@ public class Library {
     }
 
     public void reserveEntity(Account account, Entity entity, Date reservationDate) {
+        if (this.hasAccountLentEntity(account, entity)) {
+            System.out.println("Fail: Account#"+ account.getId() + " already have Entity#"+ entity.getId() +".");
+            return;
+        }
+
         if (!this.checkAccountCredibility(account)) {
             return;
         }
