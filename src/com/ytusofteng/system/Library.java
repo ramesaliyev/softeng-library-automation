@@ -13,13 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Library {
-    private final Database db;
-    private final Config config;
-
-    public Library() {
-        this.db = new Database();
-        this.config = new Config();
-    }
+    private final Database db = new Database();
+    private final Config config = new Config();
 
     public void addEntity(Entity entity) {
         this.db.addEntity(entity);
@@ -43,8 +38,8 @@ public class Library {
             return;
         }
 
-        if (!entity.hasStock()) {
-            System.out.println("Fail: Entity has no issue left in stock!");
+        if (!this.hasAccountReservedEntity(account, entity) && !entity.hasStock()) {
+            System.out.println("Fail: Entity has no issue left in stock (all lent or reserved)!");
             return;
         }
 
@@ -73,6 +68,12 @@ public class Library {
 
         this.db.lendEntity(account, entity, lendDate);
         entity.decreaseStock();
+
+        if (this.hasAccountReservedEntity(account, entity)) {
+            entity.decreaseReservationCount();
+            this.db.removeEntityReservation(account, entity);
+        }
+
         System.out.println("Success: Entity#"+ entity.getId() +" lent successfully to Account#"+ account.getId() + ".");
     }
 
@@ -95,13 +96,38 @@ public class Library {
             account.setBalance(account.getBalance() - pastDueFine);
         }
 
+        if (this.hasAccountReservedEntity(account, entity)) {
+            this.db.removeEntityReservation(account, entity);
+        }
+
         this.db.returnEntity(account, entity);
         entity.increaseStock();
+
         System.out.println("Success: Entity#"+ entity.getId() +" successfully returned back by Account#"+ account.getId() + ".");
     }
 
-    public void reserveEntity() {
+    public void reserveEntity(Account account, Entity entity, Date reservationDate) {
+        if (entity.hasStock()) {
+            System.out.println("Fail: Entity has issue in stock!");
+            return;
+        }
 
+        if (this.hasAccountReservedEntity(account, entity)) {
+            System.out.println("Fail: This account has already reserved this entity!");
+            return;
+        }
+
+        if (this.db.getReservationsByEntity(entity).size() >= entity.getIssueCount()) {
+            System.out.println("Fail: Reservations reached to issue count. There is no more issue to reserve!");
+            return;
+        }
+
+        this.db.reserveEntity(account, entity, reservationDate);
+        entity.increaseReservationCount();
+    }
+
+    public void reserveEntity(Account account, Entity entity) {
+        this.reserveEntity(account, entity, new Date());
     }
 
     public boolean hasAccountPastDueEntities(Account account) {
@@ -120,6 +146,10 @@ public class Library {
         return this.db.hasAccountLentEntity(account, entity);
     }
 
+    public boolean hasAccountReservedEntity(Account account, Entity entity) {
+        return this.db.hasAccountReservedEntity(account, entity);
+    }
+
     public Entity getEntityById(int id) {
         return this.db.getEntityById(id);
     }
@@ -130,6 +160,10 @@ public class Library {
 
     public ArrayList<Entity> getEntitiesOfAccount(Account account) {
         return this.db.getEntitiesOfAccount(account);
+    }
+
+    public ArrayList<ReservedEntity> getReservedEntitiesOfAccount(Account account) {
+        return this.db.getReservedEntitiesOfAccount(account);
     }
 
     public Config getConfig() {

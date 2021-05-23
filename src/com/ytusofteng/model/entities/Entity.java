@@ -8,6 +8,7 @@ public class Entity {
     private String name;
     private Date createdAt;
     private int inStockCount;
+    private int inReservationCount;
 
     public Entity(int id, int issueCount, String name, Date createdAt) {
         this.id = id;
@@ -15,6 +16,7 @@ public class Entity {
         this.createdAt = createdAt;
         this.issueCount = issueCount;
         this.inStockCount = issueCount;
+        this.inReservationCount = 0;
     }
 
     public int getId() {
@@ -30,7 +32,7 @@ public class Entity {
     }
 
     public boolean hasStock() {
-        return this.inStockCount > 0;
+        return (this.inStockCount - this.inReservationCount) > 0;
     }
 
     public void increaseStock() {
@@ -39,5 +41,13 @@ public class Entity {
 
     public void decreaseStock() {
         this.inStockCount--;
+    }
+
+    public void increaseReservationCount() {
+        this.inReservationCount++;
+    }
+
+    public void decreaseReservationCount() {
+        this.inReservationCount--;
     }
 }

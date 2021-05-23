@@ -22,9 +22,9 @@ public class TestHelper {
         library.addEntity(new Book(4, 10, "Digital Signal Processing", TestHelper.parseDate("01/01/2011"), "Friedrich Nietzsche", BookType.TEXTBOOK));
         library.addEntity(new Book(5, 10, "Linear Algebra Done Right", TestHelper.parseDate("01/01/2011"), "George Washington", BookType.TEXTBOOK));
         library.addEntity(new Book(6, 10, "Introduction to Machine Learning", TestHelper.parseDate("01/01/2011"), "Bugs Bunny", BookType.TEXTBOOK));
-        library.addEntity(new Magazine(101, 30, "Science Point", TestHelper.parseDate("17/11/1989"), dateYesterday));
-        library.addEntity(new Magazine(102, 30, "Games Journal", TestHelper.parseDate("03/13/2015"), dateYesterday));
-        library.addEntity(new Magazine(103, 30, "Beauty of People", TestHelper.parseDate("21/03/2013"), dateYesterday));
+        library.addEntity(new Magazine(101, 300, "Science Point", TestHelper.parseDate("17/11/1989"), dateYesterday));
+        library.addEntity(new Magazine(102, 300, "Games Journal", TestHelper.parseDate("03/13/2015"), dateYesterday));
+        library.addEntity(new Magazine(103, 300, "Beauty of People", TestHelper.parseDate("21/03/2013"), dateYesterday));
 
         // Add accounts
         library.addAccount(new Lecturer(1, 100, "Oya", "Kalipsiz", "Prof"));

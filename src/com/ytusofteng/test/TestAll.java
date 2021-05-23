@@ -13,7 +13,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LendingTest {
+public class TestAll {
     private Library library;
     private Config libraryConfig;
     private Lecturer lecturerOK;
@@ -66,7 +66,7 @@ public class LendingTest {
     }
 
     @Test
-    public void testBasicLending() {
+    public void testAll() {
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime zdate2MonthsAgo = ZonedDateTime.now().minusMonths(2);
         ZonedDateTime zdate7MonthsAgo = ZonedDateTime.now().minusMonths(7);
@@ -203,5 +203,54 @@ public class LendingTest {
         assertFalse(library.hasAccountLentEntity(studentRA, magazineGJ));
         library.checkoutEntity(studentRA, magazineGJ);
         assertFalse(library.hasAccountLentEntity(studentRA, magazineGJ));
+
+        System.out.println();
+        System.out.println("Step 16: Try to reserve an entity.");
+        assertFalse(library.hasAccountReservedEntity(studentUAI, bookTM));
+        library.reserveEntity(studentUAI, bookTM);
+        assertTrue(library.hasAccountReservedEntity(studentUAI, bookTM));
+
+        System.out.println();
+        System.out.println("Step 17: Try to reserve an entity that has stock.");
+        assertFalse(library.hasAccountReservedEntity(studentMEG, magazineGJ));
+        library.reserveEntity(studentUAI, magazineGJ);
+        assertFalse(library.hasAccountReservedEntity(studentMEG, magazineGJ));
+
+        System.out.println();
+        System.out.println("Step 18: Try to reserve an entity that already has been reserved by same account.");
+        assertEquals(1, library.getReservedEntitiesOfAccount(studentUAI).size());
+        library.reserveEntity(studentUAI, bookTM);
+        assertEquals(1, library.getReservedEntitiesOfAccount(studentUAI).size());
+
+        System.out.println();
+        System.out.println("Step 19: Try to checkout returned entity that is out of stock with an account other than the account that reserved it.");
+        assertFalse(library.hasAccountLentEntity(studentUY, bookTM));
+        assertTrue(library.hasAccountLentEntity(studentMB, bookTM));
+        assertFalse(library.hasAccountReservedEntity(studentUY, bookTM));
+        library.returnEntity(studentMB, bookTM);
+        library.checkoutEntity(studentUY, bookTM);
+        assertFalse(library.hasAccountLentEntity(studentMB, bookTM));
+        assertFalse(library.hasAccountLentEntity(studentUY, bookTM));
+
+        System.out.println();
+        System.out.println("Step 20: Try to checkout returned entity that is out of stock with the account that reserved it.");
+        assertFalse(library.hasAccountLentEntity(studentUAI, bookTM));
+        assertTrue(library.hasAccountReservedEntity(studentUAI, bookTM));
+        library.checkoutEntity(studentUAI, bookTM);
+        assertTrue(library.hasAccountLentEntity(studentUAI, bookTM));
+        assertFalse(library.hasAccountReservedEntity(studentUAI, bookTM));
+
+        System.out.println();
+        System.out.println("Step 21: Try to reserved entity which already reserved issue count times.");
+        library.checkoutEntity(studentUAI, bookHP);
+        assertFalse(library.hasAccountReservedEntity(studentUY, bookHP));
+        assertFalse(library.hasAccountReservedEntity(studentUY, bookHP));
+        assertFalse(library.hasAccountReservedEntity(studentUY, bookHP));
+        library.reserveEntity(studentRA, bookHP);
+        library.reserveEntity(studentMB, bookHP);
+        library.reserveEntity(studentUY, bookHP);
+        assertTrue(library.hasAccountReservedEntity(studentRA, bookHP));
+        assertTrue(library.hasAccountReservedEntity(studentMB, bookHP));
+        assertFalse(library.hasAccountReservedEntity(studentUY, bookHP));
     }
 }
