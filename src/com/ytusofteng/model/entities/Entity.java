@@ -23,6 +23,10 @@ public class Entity {
         return this.id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public int getIssueCount() {
         return issueCount;
     }

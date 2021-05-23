@@ -5,12 +5,14 @@ public class Account {
     private long balance;
     public String name;
     public String surname;
+    public String email;
 
-    public Account(int id, int balance, String name, String surname) {
+    public Account(int id, int balance, String name, String surname, String email) {
         this.id = id;
         this.balance = balance;
         this.name = name;
         this.surname = surname;
+        this.email = email;
     }
 
     public int getId() {
@@ -23,5 +25,9 @@ public class Account {
 
     public void setBalance(long balance) {
         this.balance = balance;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }

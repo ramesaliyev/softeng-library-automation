@@ -27,14 +27,14 @@ public class TestHelper {
         library.addEntity(new Magazine(103, 300, "Beauty of People", TestHelper.parseDate("21/03/2013"), dateYesterday));
 
         // Add accounts
-        library.addAccount(new Lecturer(1, 100, "Oya", "Kalipsiz", "Prof"));
-        library.addAccount(new Lecturer(2, 100, "Yunus Emre", "Selcuk", "Dr"));
-        library.addAccount(new Officer(51, 50, "Suna", "Tacalan", "Sef"));
-        library.addAccount(new Student(101,10,"Ugurcan", "Yilmaz"));
-        library.addAccount(new Student(102,10,"Muhammed Enes", "Gulsoy"));
-        library.addAccount(new Student(103,10,"Mehmet", "Bingol"));
-        library.addAccount(new Student(104,10,"Rames", "Aliyev"));
-        library.addAccount(new Student(105,10,"Umut Arda", "Ince"));
+        library.addAccount(new Lecturer(1, 100, "Oya", "Kalipsiz", "Prof", "oya.kalipsiz@yildiz.edu.tr"));
+        library.addAccount(new Lecturer(2, 100, "Yunus Emre", "Selcuk", "Dr", "dr.yunus.emre.selcuk@yildiz.edu.tr"));
+        library.addAccount(new Officer(51, 50, "Suna", "Tacalan", "Sef", "sef.suna.tacalan@yildiz.edu.tr"));
+        library.addAccount(new Student(101,10,"Ugurcan", "Yilmaz", "ugurcan.yilmaz@gmail.com"));
+        library.addAccount(new Student(102,10,"Muhammed Enes", "Gulsoy", "muhammed.enes.gulsoy@gmail.com"));
+        library.addAccount(new Student(103,10,"Mehmet", "Bingol", "mehmet.bingol@gmail.com"));
+        library.addAccount(new Student(104,10,"Rames", "Aliyev", "rames.aliyev@gmail.com"));
+        library.addAccount(new Student(105,10,"Umut Arda", "Ince", "umur.arda.ince@gmail.com"));
 
         // Configure library.
         // Max number of entity can be lent by account type.

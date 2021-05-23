@@ -32,29 +32,37 @@ public class Library {
         this.config.setLendingCountDuration(accountClass, value);
     }
 
+    public boolean checkAccountCredibility(Account account) {
+        if (account.getBalance() <= 0) {
+            System.out.println("Fail: Account has insufficient balance!");
+            return false;
+        }
+
+        if (this.getEntitiesOfAccount(account).size() >= this.config.getLendingCountLimit(account.getClass())) {
+            System.out.println("Fail: Account reached to maximum lend limit!");
+            return false;
+        }
+
+        if (this.hasAccountPastDueEntities(account)) {
+            System.out.println("Fail: Account has past due entities!");
+            return false;
+        }
+
+        return true;
+    }
+
     public void checkoutEntity(Account account, Entity entity, Date lendDate) {
         if (this.hasAccountLentEntity(account, entity)) {
             System.out.println("Fail: Account#"+ account.getId() + " already have Entity#"+ entity.getId() +".");
             return;
         }
 
+        if (!this.checkAccountCredibility(account)) {
+            return;
+        }
+
         if (!this.hasAccountReservedEntity(account, entity) && !entity.hasStock()) {
             System.out.println("Fail: Entity has no issue left in stock (all lent or reserved)!");
-            return;
-        }
-
-        if (account.getBalance() <= 0) {
-            System.out.println("Fail: Account has insufficient balance!");
-            return;
-        }
-
-        if (this.getEntitiesOfAccount(account).size() >= this.config.getLendingCountLimit(account.getClass())) {
-            System.out.println("Fail: Account reached to maximum lend limit!");
-            return;
-        }
-
-        if (this.hasAccountPastDueEntities(account)) {
-            System.out.println("Fail: Account has past due entities!");
             return;
         }
 
@@ -104,9 +112,15 @@ public class Library {
         entity.increaseStock();
 
         System.out.println("Success: Entity#"+ entity.getId() +" successfully returned back by Account#"+ account.getId() + ".");
+
+        this.sendReservationNotifications(entity);
     }
 
     public void reserveEntity(Account account, Entity entity, Date reservationDate) {
+        if (!this.checkAccountCredibility(account)) {
+            return;
+        }
+
         if (entity.hasStock()) {
             System.out.println("Fail: Entity has issue in stock!");
             return;
@@ -124,10 +138,23 @@ public class Library {
 
         this.db.reserveEntity(account, entity, reservationDate);
         entity.increaseReservationCount();
+
+        System.out.println("Success: Entity#"+ entity.getId() +" successfully reserved by Account#"+ account.getId() + ".");
     }
 
     public void reserveEntity(Account account, Entity entity) {
         this.reserveEntity(account, entity, new Date());
+    }
+
+    public void sendReservationNotifications(Entity entity) {
+        ArrayList<ReservedEntity> reservedEntities = this.db.getReservationsByEntity(entity);
+
+        if (reservedEntities.size() > 0) {
+            System.out.println("Success: Entity #"+ entity.getId() + " become available, emailing accounts that reserved this entity.");
+            for (ReservedEntity reservedEntity:reservedEntities) {
+                System.out.println("Success: Email sent to address: "+ reservedEntity.account.getEmail());
+            }
+        }
     }
 
     public boolean hasAccountPastDueEntities(Account account) {
