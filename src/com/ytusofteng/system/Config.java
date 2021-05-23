@@ -1,7 +1,6 @@
 package com.ytusofteng.system;
 
 import com.ytusofteng.model.accounts.Account;
-import com.ytusofteng.model.entities.Entity;
 
 import java.util.HashMap;
 

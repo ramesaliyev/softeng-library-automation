@@ -51,6 +51,18 @@ public class Library {
         return true;
     }
 
+    public boolean checkAccountReservationRights(Account account, Entity entity) {
+        if (entity.getClass() == Book.class) {
+            Book book = (Book) entity;
+            if (book.getType() == BookType.TEXTBOOK && account.getClass() != Lecturer.class) {
+                System.out.println("Fail: Only lecturers can checkout books in Textbook type!");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void checkoutEntity(Account account, Entity entity, Date lendDate) {
         if (this.hasAccountLentEntity(account, entity)) {
             System.out.println("Fail: Account#"+ account.getId() + " already have Entity#"+ entity.getId() +".");
@@ -61,17 +73,13 @@ public class Library {
             return;
         }
 
-        if (!this.hasAccountReservedEntity(account, entity) && !entity.hasStock()) {
-            System.out.println("Fail: Entity has no issue left in stock (all lent or reserved)!");
+        if (!this.checkAccountReservationRights(account, entity)) {
             return;
         }
 
-        if (entity.getClass() == Book.class) {
-            Book book = (Book) entity;
-            if (book.getType() == BookType.TEXTBOOK && account.getClass() != Lecturer.class) {
-                System.out.println("Fail: Only lecturers can checkout books in Textbook type!");
-                return;
-            }
+        if (!this.hasAccountReservedEntity(account, entity) && !entity.hasStock()) {
+            System.out.println("Fail: Entity has no issue left in stock (all lent or reserved)!");
+            return;
         }
 
         this.db.lendEntity(account, entity, lendDate);
@@ -118,6 +126,10 @@ public class Library {
 
     public void reserveEntity(Account account, Entity entity, Date reservationDate) {
         if (!this.checkAccountCredibility(account)) {
+            return;
+        }
+
+        if (!this.checkAccountReservationRights(account, entity)) {
             return;
         }
 
