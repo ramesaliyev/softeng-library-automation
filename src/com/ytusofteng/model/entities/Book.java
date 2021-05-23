@@ -13,4 +13,8 @@ public class Book extends Entity {
         this.author = author;
         this.type = type;
     }
+
+    public BookType getType() {
+        return type;
+    }
 }

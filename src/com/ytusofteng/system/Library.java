@@ -1,10 +1,16 @@
 package com.ytusofteng.system;
 
-import com.ytusofteng.model.accounts.Account;
-import com.ytusofteng.model.entities.Entity;
+import com.ytusofteng.model.accounts.*;
+import com.ytusofteng.model.entities.*;
+import com.ytusofteng.model.enums.BookType;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Library {
     private final Database db;
@@ -42,9 +48,27 @@ public class Library {
             return;
         }
 
+        if (account.getBalance() <= 0) {
+            System.out.println("Fail: Account has insufficient balance!");
+            return;
+        }
+
         if (this.getEntitiesOfAccount(account).size() >= this.config.getLendingCountLimit(account.getClass())) {
             System.out.println("Fail: Account reached to maximum lend limit!");
             return;
+        }
+
+        if (this.hasAccountPastDueEntities(account)) {
+            System.out.println("Fail: Account has past due entities!");
+            return;
+        }
+
+        if (entity.getClass() == Book.class) {
+            Book book = (Book) entity;
+            if (book.getType() == BookType.TEXTBOOK && account.getClass() != Lecturer.class) {
+                System.out.println("Fail: Only lecturers can checkout books in Textbook type!");
+                return;
+            }
         }
 
         this.db.lendEntity(account, entity, lendDate);
@@ -62,6 +86,15 @@ public class Library {
             return;
         }
 
+        LentEntity lentEntity = this.db.getAccountLentEntity(account, entity);
+        long lendDurationInDays = Duration.between(lentEntity.lendDate.toInstant(), ZonedDateTime.now()).toDays();
+        int lendingDurationLimitInDays = this.config.getLendingDurationLimit(account.getClass());
+
+        if (lendDurationInDays > lendingDurationLimitInDays) {
+            long pastDueFine = (lendDurationInDays - lendingDurationLimitInDays);
+            account.setBalance(account.getBalance() - pastDueFine);
+        }
+
         this.db.returnEntity(account, entity);
         entity.increaseStock();
         System.out.println("Success: Entity#"+ entity.getId() +" successfully returned back by Account#"+ account.getId() + ".");
@@ -69,6 +102,18 @@ public class Library {
 
     public void reserveEntity() {
 
+    }
+
+    public boolean hasAccountPastDueEntities(Account account) {
+        ArrayList<LentEntity> accountLentEntities = this.db.getLentEntitiesOfAccount(account);
+        int lendingDurationLimitInDays = this.config.getLendingDurationLimit(account.getClass());
+        Instant oldestValidCheckoutDate = ZonedDateTime.now().minusDays(lendingDurationLimitInDays).toInstant();
+
+        List<LentEntity> searchResult = accountLentEntities.stream()
+            .filter(le -> le.lendDate.toInstant().isBefore(oldestValidCheckoutDate))
+            .collect(Collectors.toList());
+
+        return searchResult.size() > 0;
     }
 
     public boolean hasAccountLentEntity(Account account, Entity entity) {
@@ -85,5 +130,9 @@ public class Library {
 
     public ArrayList<Entity> getEntitiesOfAccount(Account account) {
         return this.db.getEntitiesOfAccount(account);
+    }
+
+    public Config getConfig() {
+        return config;
     }
 }

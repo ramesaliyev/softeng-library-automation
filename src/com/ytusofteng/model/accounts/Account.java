@@ -2,7 +2,7 @@ package com.ytusofteng.model.accounts;
 
 public class Account {
     private int id;
-    private int balance;
+    private long balance;
     public String name;
     public String surname;
 
@@ -15,5 +15,13 @@ public class Account {
 
     public int getId() {
         return id;
+    }
+
+    public long getBalance() {
+        return this.balance;
+    }
+
+    public void setBalance(long balance) {
+        this.balance = balance;
     }
 }

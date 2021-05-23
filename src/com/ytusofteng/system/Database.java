@@ -107,6 +107,14 @@ public class Database {
         return new ArrayList<>(this.getAccountEntityMap(account).keySet());
     }
 
+    public ArrayList<LentEntity> getLentEntitiesOfAccount(Account account) {
+        return new ArrayList<>(this.getAccountEntityMap(account).values());
+    }
+
+    public LentEntity getAccountLentEntity(Account account, Entity entity) {
+        return this.getAccountEntityMap(account).get(entity);
+    }
+
     public boolean hasAccountLentEntity(Account account, Entity entity) {
         ArrayList<Entity> accountEntities = this.getEntitiesOfAccount(account);
         return this.getEntityById(entity.getId(), accountEntities) != null;
