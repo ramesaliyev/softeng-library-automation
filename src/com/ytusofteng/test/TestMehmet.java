@@ -77,4 +77,16 @@ public class TestMehmet extends TestBase {
         assertTrue(library.hasAccountLentEntity(lecturerOK, textbookDSP));
         assertEquals(1, library.getEntitiesOfAccount(lecturerOK).size());
     }
+
+    @Test
+    public void testReserveEntityThatAlreadyLentByAccount() {
+        System.out.println();
+        System.out.println("TEST: Try to reserve an entity with an account that already lent it.");
+
+        library.checkoutEntity(lecturerOK, textbookML); // No stock left.
+
+        assertFalse(library.hasAccountReservedEntity(lecturerOK, textbookML));
+        library.reserveEntity(lecturerOK, textbookML);
+        assertFalse(library.hasAccountReservedEntity(lecturerOK, textbookML)); // Cannot reserve since already has lent it.
+    }
 }

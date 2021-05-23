@@ -107,16 +107,4 @@ public class TestRames extends TestBase {
         library.checkoutEntity(lecturerYES, magazineGJ);
         assertFalse(library.hasAccountLentEntity(lecturerYES, magazineGJ)); // Cannot checkout due to negative balance.
     }
-
-    @Test
-    public void testReserveEntityThatAlreadyLentByAccount() {
-        System.out.println();
-        System.out.println("TEST: Try to reserve an entity with an account that already lent it.");
-
-        library.checkoutEntity(lecturerOK, textbookML); // No stock left.
-
-        assertFalse(library.hasAccountReservedEntity(lecturerOK, textbookML));
-        library.reserveEntity(lecturerOK, textbookML);
-        assertFalse(library.hasAccountReservedEntity(lecturerOK, textbookML)); // Cannot reserve since already has lent it.
-    }
 }
