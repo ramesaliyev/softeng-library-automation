@@ -134,7 +134,7 @@ public class Library {
             return;
         }
 
-        if (entity.hasStock()) {
+        if (entity.hasAvailableStock()) {
             System.out.println("Fail: Entity has issue in stock!");
             return;
         }
