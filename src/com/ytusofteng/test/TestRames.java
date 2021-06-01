@@ -105,4 +105,34 @@ public class TestRames extends TestBase {
         library.checkoutEntity(lecturerYES, magazineGJ);
         assertFalse(library.hasAccountLentEntity(lecturerYES, magazineGJ)); // Cannot checkout due to negative balance.
     }
+
+    @Test
+    public void testCheckoutReservedOutOfStockEntityAccountThatReservedIt() {
+        System.out.println();
+        System.out.println("TEST: Try to checkout out of stock entity with the account that reserved it.");
+
+        library.checkoutEntity(studentRA, bookTM); // bookTM has only 1 stock.
+        library.reserveEntity(studentUAI, bookTM); // Ok
+
+        assertFalse(library.hasAccountLentEntity(studentUAI, bookTM));
+        assertTrue(library.hasAccountReservedEntity(studentUAI, bookTM));
+        library.checkoutEntity(studentUAI, bookTM); // Should NOT be able to checkout.
+        assertFalse(library.hasAccountLentEntity(studentUAI, bookTM)); // Did NOT checkout.
+        assertTrue(library.hasAccountReservedEntity(studentUAI, bookTM));
+    }
+
+    @Test
+    public void testCheckoutReservedOutOfStockEntityAnotherAccount() {
+        System.out.println();
+        System.out.println("TEST: Try to checkout out of stock entity with another account.");
+
+        library.checkoutEntity(studentRA, bookTM); // bookTM has only 1 stock.
+        library.reserveEntity(studentUAI, bookTM); // Ok
+
+        assertFalse(library.hasAccountLentEntity(studentMB, bookTM));
+        assertFalse(library.hasAccountReservedEntity(studentMB, bookTM));
+        library.checkoutEntity(studentMB, bookTM); // Should NOT be able to checkout.
+        assertFalse(library.hasAccountLentEntity(studentMB, bookTM)); // Did NOT checkout.
+        assertFalse(library.hasAccountReservedEntity(studentMB, bookTM));
+    }
 }

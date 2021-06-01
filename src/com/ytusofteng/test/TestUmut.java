@@ -32,6 +32,7 @@ public class TestUmut extends TestBase {
 
         library.checkoutEntity(studentRA, bookTM); // bookTM has only 1 stock.
         library.reserveEntity(studentUAI, bookTM); // Ok
+        library.returnEntity(studentRA, bookTM);
 
         assertFalse(library.hasAccountLentEntity(studentUAI, bookTM));
         assertTrue(library.hasAccountReservedEntity(studentUAI, bookTM));
@@ -47,6 +48,7 @@ public class TestUmut extends TestBase {
 
         library.checkoutEntity(studentRA, bookTM); // bookTM has only 1 stock.
         library.reserveEntity(studentUAI, bookTM); // Ok
+        library.returnEntity(studentRA, bookTM);
 
         assertFalse(library.hasAccountLentEntity(studentUAI, bookTM));
         assertTrue(library.hasAccountReservedEntity(studentUAI, bookTM));

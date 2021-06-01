@@ -36,6 +36,10 @@ public class Entity {
     }
 
     public boolean hasStock() {
+        return this.inStockCount > 0;
+    }
+
+    public boolean hasAvailableStock() {
         return (this.inStockCount - this.inReservationCount) > 0;
     }
 

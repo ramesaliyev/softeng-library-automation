@@ -77,7 +77,7 @@ public class Library {
             return;
         }
 
-        if (!this.hasAccountReservedEntity(account, entity) && !entity.hasStock()) {
+        if (!entity.hasStock() || (!this.hasAccountReservedEntity(account, entity) && !entity.hasAvailableStock())) {
             System.out.println("Fail: Entity has no issue left in stock (all lent or reserved)!");
             return;
         }
@@ -110,10 +110,6 @@ public class Library {
         if (lendDurationInDays > lendingDurationLimitInDays) {
             long pastDueFine = (lendDurationInDays - lendingDurationLimitInDays);
             account.setBalance(account.getBalance() - pastDueFine);
-        }
-
-        if (this.hasAccountReservedEntity(account, entity)) {
-            this.db.removeEntityReservation(account, entity);
         }
 
         this.db.returnEntity(account, entity);
